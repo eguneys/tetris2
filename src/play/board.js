@@ -2,23 +2,31 @@ import { objMap } from '../util2';
 import { dContainer, sprite } from '../asprite';
 
 import { allPos, pos2key } from '../util';
+import * as v from '../vec2';
 
 export default function Board(play, ctx) {
 
   const { textures, canvas } = ctx;
 
-  let tileSize,
+  let boardMargin,
+      tileSize,
       bounds;
 
   let tetris;
 
   this.init = (data) => {
 
+    boardMargin = data.boardMargin;
     tileSize = data.tileSize;
     bounds = data.bounds;
     tetris = data.tetris;
 
     initContainer();
+  };
+
+  const renderTile = ({key, color}) => {
+    let dTile = dTiles[key];
+    dTile.setColor(color);
   };
 
   this.update = delta => {
@@ -29,12 +37,12 @@ export default function Board(play, ctx) {
     let current = tetris.current();
 
     if (current) {
-      current.tiles.forEach(({ key, color }) => {
-
-        let dTile = dTiles[key];
-        dTile.setColor(color);
-      });
+      current.tiles.forEach(renderTile);
     }
+
+    let tiles = tetris.tiles();
+
+    objMap(tiles, (_, tile) => renderTile(tile));
   };
 
   const dTiles = {};
@@ -47,10 +55,16 @@ export default function Board(play, ctx) {
     bg.height = bounds.h;
     container.addChild(bg);
 
+    let tilesContainer = dContainer();
+    tilesContainer.position.set(boardMargin, boardMargin);
+    tilesContainer.width = bounds.w - boardMargin * 2.0;
+    tilesContainer.height = bounds.h - boardMargin * 2.0;
+    container.addChild(tilesContainer);
+
     allPos.forEach(pos => {
       let dTile = new Tile(play, ctx);
       dTile.init({pos, tileSize});
-      container.addChild(dTile.container);
+      tilesContainer.addChild(dTile.container);
       dTiles[pos2key(pos)] = dTile;
     });
   };
@@ -83,7 +97,7 @@ function Tile(play, ctx) {
   this.setColor = (color) => {
     if (color) {
       d.visible = true;
-      d.texture = textures['hud'];
+      d.texture = textures.colors[color];
     } else {
       d.visible = false;
     }

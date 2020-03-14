@@ -37,8 +37,8 @@ export default function Controller({
   speed
 }) {
 
-  let score,
-      addScore;
+  let score = 0,
+      addScore = 0;
 
   let gameover = 0,
       shouldResetGame,
@@ -56,6 +56,7 @@ export default function Controller({
 
   this.tiles = () => tiles;
   this.current = () => current;
+  this.score = () => score;
 
   const blockTiles = (shape, x, y) => {
     return shapeToPosMap(shape).map(pos => {
@@ -114,12 +115,12 @@ export default function Controller({
   };
 
   this.resetGame = () => {
-    this.data.tiles = {};
-    this.data.level = 1;
-    this.data.score = 0;
-    this.data.current = undefined;
-    this.data.next = getShape(randomShapeKey());
-    this.data.gameover = 0;
+    tiles = {};
+    level = 1;
+    score = 0;
+    current = undefined;
+    next = getShape(randomShapeKey());
+    gameover = 0;
   };
 
   this.getSpeed = () => {
@@ -341,7 +342,6 @@ export default function Controller({
       }
     }
   };
-
 
   const withDelay = (fn, delay, updateFn) => {
     let lastUpdate = 0;

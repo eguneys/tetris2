@@ -1,5 +1,6 @@
 import { dContainer, sprite } from '../asprite';
 
+import { Moves } from '../tetris';
 import Tetris from '../tetris';
 
 import Board from './board';
@@ -10,12 +11,16 @@ import { rows, cols } from '../util';
 
 export default function Play(ctx) {
 
-  const { textures, canvas, config: { 
-    cols,
-    rows,
-    speed,
-    level
-  } } = ctx;
+  const 
+  { textures,
+    canvas, 
+    keyboard,
+    config: { 
+      cols,
+      rows,
+      speed,
+      level
+    } } = ctx;
 
   let tetris = new Tetris({
     cols,
@@ -28,8 +33,9 @@ export default function Play(ctx) {
     let marginW = width * 0.01,
         marginH = height * 0.01;
 
+    let boardMargin = 4;
     let boardW = width * 0.63,
-        tileSize = boardW / cols;
+        tileSize = (boardW - boardMargin * 2) / cols;
 
     let nextWholdW = width - boardW - marginW * 4,
         nextW = nextWholdW * 0.5 - marginW;
@@ -41,7 +47,7 @@ export default function Play(ctx) {
         scoreY = marginH * 2,
         scoreBottom = scoreY + scoreH;
 
-    let boardH = rows * tileSize,
+    let boardH = rows * tileSize + boardMargin * 2,
         boardX = (width - boardW) * 0.5,
         boardY = scoreBottom + marginH * 4,
         boardRight = boardX + boardW;
@@ -54,6 +60,7 @@ export default function Play(ctx) {
       next: bounds(nextX, nextY, nextW, nextH),
       board: bounds(boardX, boardY, boardW, boardH),
       score: bounds(scoreX, scoreY, scoreW, scoreH),
+      boardMargin,
       tileSize,
       width,
       height
@@ -69,14 +76,52 @@ export default function Play(ctx) {
   this.init = data => {
     bs = boundsF();
 
-    board.init({ tileSize: bs.tileSize, bounds: bs.board, tetris });
+    board.init({ boardMargin: bs.boardMargin, 
+                 tileSize: bs.tileSize,
+                 bounds: bs.board, tetris });
     next.init({ bounds: bs.next, tetris });
     score.init({ bounds: bs.score, tetris });
 
     initContainer();
   };
 
+  const throttle = (fn, delay = 50) => {
+    let called = false;
+    return (...args) => {
+      if (!called) {
+        called = true;
+        fn(...args);
+        setTimeout(() => called = false, delay);
+      }
+    };
+  };
+
+  const slowRotate = throttle(() => {
+    tetris.move(Moves.rotate);
+  }, 200);
+
+  const slowMove = throttle((move) => {
+    tetris.move(move);
+  }, 50);
+
+  const maybeUserMove = delta => {
+    const { left, right, up, down } = keyboard.data;
+
+    if (up) {
+      slowRotate();
+    } else if (down) {
+      slowMove(Moves.down);
+    } else if (left) {
+      slowMove(Moves.left);
+    } else if (right) {
+      slowMove(Moves.right);
+    }
+  };
+
   this.update = delta => {
+
+    maybeUserMove(delta);
+
     tetris.update(delta);
     board.update(delta);
     next.update(delta);

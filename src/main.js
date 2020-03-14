@@ -18,7 +18,7 @@ export function app(element, options) {
   const aBase = (url) => assetsBase + url;
   
   PIXI.Loader.shared
-    .add('hud', aBase('Sprite-Hud-0001.json'))
+    .add('tiles', aBase('tetris.png'))
     .load((loader, resources) => {
 
       const textures = sprites(resources);

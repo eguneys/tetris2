@@ -2,6 +2,7 @@ import * as PIXI from 'pixi.js';
 
 export default function sprites(resources) {
 
+  const texture = name => resources[name].texture;
   const ssTextures = name => resources[name].spritesheet.textures;
 
   const tss = {};
@@ -11,14 +12,32 @@ export default function sprites(resources) {
     tss['number' + no] = labelTexture(no + '')
   );
 
+  let tTiles = texture('tiles');
+  let colors = {
+    blue: tetrisTileTextures(tTiles, [0, 0]),
+    orange: tetrisTileTextures(tTiles, [0, 32 * 1]),
+    cyan: tetrisTileTextures(tTiles, [0, 32 * 2]),
+    red: tetrisTileTextures(tTiles, [0, 32 * 3]),
+    green: tetrisTileTextures(tTiles, [0, 32 * 4]),
+    yellow: tetrisTileTextures(tTiles, [0, 32 * 5]),
+    purple: tetrisTileTextures(tTiles, [0, 32 * 6])
+  };
+
   return {
+    colors,
     'debugO': bgTexture('rgba(200, 100, 100, 0.1)'),
-    'hud': ssTextures('hud')['Sprite-0001.'],
     'labelLevel': labelTexture('Level'),
     'labelNext': labelTexture('Next'),
     ...tss
   };
 }
+
+const tetrisTileTextures = (texture, frame) => {
+  let rect = new PIXI.Rectangle(frame[0], frame[1], 32, 32);
+  let t = new PIXI.Texture(texture);
+  t.frame = rect;
+  return t;
+};
 
 const animationTextures = (textures, rName, frames) => {
   let res = [];

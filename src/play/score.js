@@ -6,14 +6,19 @@ export default function Play(play, ctx) {
 
   let scoreDisplay;
 
+  let tetris;
+
   let bounds;
 
   this.init = data => {
     bounds = data.bounds;
+    tetris = data.tetris;
     initContainer();
   };
 
   this.update = delta => {
+    let score = tetris.score();
+    scoreDisplay.setData({ number: score });
   };
 
   const initContainer = () => {
