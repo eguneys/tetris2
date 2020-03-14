@@ -1,8 +1,10 @@
-import { dContainer, sprite } from '../asprite';
+import { dContainer, sprite, nContainer } from '../asprite';
 
 export default function Play(play, ctx) {
 
   const { textures } = ctx;
+
+  let scoreDisplay;
 
   let bounds;
 
@@ -21,6 +23,11 @@ export default function Play(play, ctx) {
     bg.height = bounds.h;
     container.addChild(bg);
 
+
+    scoreDisplay = nContainer(textures, 0);
+    scoreDisplay.width = bounds.w;
+    scoreDisplay.height = bounds.h;
+    container.addChild(scoreDisplay);
   };
 
   const container = this.container = dContainer();

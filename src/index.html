@@ -33,8 +33,20 @@
      }
 
     </style>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js"></script>
 </head>
 <body>
+  <script>
+   WebFont.load({
+     google: {
+       families: ['Baloo']
+     },
+     active: e => {
+       init();
+     }     
+   });
+  </script>
   <section>
     <div id="app"></div>
 
@@ -42,7 +54,9 @@
 
   <script>
 
-   Tetris(document.getElementById('app'), {});
+   function init() {
+     Tetris(document.getElementById('app'), {});
+   }
    
   </script>
 

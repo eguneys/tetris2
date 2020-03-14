@@ -4,9 +4,19 @@ export default function sprites(resources) {
 
   const ssTextures = name => resources[name].spritesheet.textures;
 
+  const tss = {};
+
+  
+  [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, ','].forEach(no =>
+    tss['number' + no] = labelTexture(no + '')
+  );
+
   return {
     'debugO': bgTexture('rgba(200, 100, 100, 0.1)'),
     'hud': ssTextures('hud')['Sprite-0001.'],
+    'labelLevel': labelTexture('Level'),
+    'labelNext': labelTexture('Next'),
+    ...tss
   };
 }
 
@@ -19,6 +29,19 @@ const animationTextures = (textures, rName, frames) => {
   return res;
 };
 
+const labelTexture = (label) => {
+  return withCanvasTexture(label.length * 100 * 0.5, 100, (w, h, canvas, ctx) => {
+    //ctx.fillStyle = 'red';
+    //ctx.fillRect(0, 0, w, h);
+    ctx.font = '50pt Baloo';
+    ctx.fillStyle = 'white';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(label, w / 2, 50);
+    
+    return canvas;
+  });
+};
 
 const bgTexture = (color) => {
   return withCanvasTexture(256, 256, (w, h, canvas, ctx) => {

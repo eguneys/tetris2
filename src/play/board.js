@@ -32,7 +32,6 @@ export default function Board(play, ctx) {
       current.tiles.forEach(({ key, color }) => {
 
         let dTile = dTiles[key];
-
         dTile.setColor(color);
       });
     }

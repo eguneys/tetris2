@@ -77,6 +77,7 @@ export default function Play(ctx) {
   };
 
   this.update = delta => {
+    tetris.update(delta);
     board.update(delta);
     next.update(delta);
     score.update(delta);

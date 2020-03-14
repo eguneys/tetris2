@@ -19,6 +19,15 @@ export default function Play(play, ctx) {
   };
 
   const initContainer = () => {
+    // let header = sprite(textures['hud']);
+    // header.width = bounds.w;
+    // header.height = bounds.h * 0.2;
+    // container.addChild(header);
+
+    let nextLabel = sprite(textures['labelNext']);
+    nextLabel.width = bounds.w;
+    nextLabel.height = bounds.h * 0.2;
+    container.addChild(nextLabel);
 
     let bg = sprite(textures['debugO']);
     bg.width = bounds.w;
